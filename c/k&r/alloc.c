@@ -34,6 +34,7 @@ int main(void){
         strcpy(p,"Hi There");
         printf(" %s\n",p);
         afree(p);
-  
+        // NOTE : Even You can print the value after the free operation 
+        // So , When other alloc operation can overrite the values . 
         return 0;
 }
