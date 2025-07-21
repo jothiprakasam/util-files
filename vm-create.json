@@ -2,15 +2,20 @@
   "apiVersion": "kubevirt.io/v1",
   "kind": "VirtualMachine",
   "metadata": {
-    "name": "win10-lab",
-    "namespace": "default"
+    "name": "win11-installer-vm",
+    "namespace": "default",
+    "labels": {
+      "os": "win11",
+      "source": "shared-pvc",
+      "owner": "jothi"
+    }
   },
   "spec": {
     "running": false,
     "template": {
       "metadata": {
         "labels": {
-          "kubevirt.io/domain": "win10-lab"
+          "kubevirt.io/domain": "win11-installer-vm"
         }
       },
       "spec": {
@@ -22,12 +27,18 @@
                 "disk": {
                   "bus": "virtio"
                 }
+              },
+              {
+                "name": "installeriso",
+                "cdrom": {
+                  "bus": "sata"
+                }
               }
             ]
           },
           "resources": {
             "requests": {
-              "memory": "2Gi"
+              "memory": "4Gi"
             }
           }
         },
@@ -36,6 +47,12 @@
             "name": "rootdisk",
             "containerDisk": {
               "image": "kubevirt/windows-container-disk-demo"
+            }
+          },
+          {
+            "name": "installeriso",
+            "persistentVolumeClaim": {
+              "claimName": "windows-iso"
             }
           }
         ]
