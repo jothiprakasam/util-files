@@ -1,0 +1,105 @@
+{
+  "apiVersion": "kubevirt.io/v1",
+  "kind": "VirtualMachine",
+  "metadata": {
+    "name": "windows-api-test",
+    "namespace": "default",
+    "labels": {
+      "owner": "jothi",
+      "source": "iso-reuse",
+      "kubevirt.io/domain": "windows-api-test"
+    }
+  },
+  "spec": {
+    "running": false,
+    "template": {
+      "metadata": {
+        "labels": {
+          "kubevirt.io/domain": "windows-api-test"
+        }
+      },
+      "spec": {
+        "domain": {
+          "firmware": {
+            "bootloader": {
+              "efi": {}
+            },
+            "secureBoot": true
+          },
+          "features": {
+            "smm": {
+              "enabled": true
+            }
+          },
+          "cpu": {
+            "cores": 2
+          },
+          "resources": {
+            "requests": {
+              "memory": "6Gi"
+            }
+          },
+          "devices": {
+            "disks": [
+              {
+                "name": "cdrom-disk",
+                "cdrom": {
+                  "bus": "sata"
+                },
+                "bootOrder": 1
+              },
+              {
+                "name": "my-harddisk",
+                "disk": {
+                  "bus": "virtio"
+                },
+                "bootOrder": 2
+              },
+              {
+                "name": "virtio-disk",
+                "cdrom": {
+                  "bus": "sata"
+                }
+              }
+            ],
+            "interfaces": [
+              {
+                "name": "default",
+                "masquerade": {}
+              }
+            ],
+            "tpm": {
+              "deviceName": "tpm0"
+            }
+          }
+        },
+        "networks": [
+          {
+            "name": "default",
+            "pod": {}
+          }
+        ],
+        "volumes": [
+          {
+            "name": "cdrom-disk",
+            "persistentVolumeClaim": {
+              "claimName": "windows-iso"
+            }
+          },
+          {
+            "name": "my-harddisk",
+            "persistentVolumeClaim": {
+              "claimName": "apivm-vdi-disk"
+            }
+          },
+          {
+            "name": "virtio-disk",
+            "persistentVolumeClaim": {
+              "claimName": "virtio-iso"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
