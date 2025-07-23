@@ -85,7 +85,7 @@
           {
             "name": "rootdisk",
             "persistentVolumeClaim": {
-              "claimName": "jothi-lite-disk"
+              "claimName": "apivm-vdi-disk"
             }
           },
           {
