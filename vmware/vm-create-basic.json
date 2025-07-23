@@ -1,0 +1,51 @@
+{
+  "apiVersion": "kubevirt.io/v1",
+  "kind": "VirtualMachine",
+  "metadata": {
+    "name": "vm-test-basic",
+    "namespace": "default",
+    "labels": {
+      "kubevirt.io/domain": "vm-test-basic"
+    }
+  },
+  "spec": {
+    "running": false,
+    "template": {
+      "metadata": {
+        "labels": {
+          "kubevirt.io/domain": "vm-test-basic"
+        }
+      },
+      "spec": {
+        "domain": {
+          "cpu": {
+            "cores": 1
+          },
+          "resources": {
+            "requests": {
+              "memory": "512Mi"
+            }
+          },
+          "devices": {
+            "disks": [
+              {
+                "name": "containerdisk",
+                "disk": {
+                  "bus": "virtio"
+                }
+              }
+            ]
+          }
+        },
+        "volumes": [
+          {
+            "name": "containerdisk",
+            "containerDisk": {
+              "image": "kubevirt/cirros-container-disk-demo"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
