@@ -2,12 +2,12 @@
   "apiVersion": "kubevirt.io/v1",
   "kind": "VirtualMachine",
   "metadata": {
-    "name": "windows-api-test",
+    "name": "windows-apicall-vm",
     "namespace": "default",
     "labels": {
       "owner": "jothi",
-      "source": "iso-reuse",
-      "kubevirt.io/domain": "windows-api-test"
+      "source": "no-tpm",
+      "kubevirt.io/domain": "windows-apicall-vm"
     }
   },
   "spec": {
@@ -15,7 +15,7 @@
     "template": {
       "metadata": {
         "labels": {
-          "kubevirt.io/domain": "windows-api-test"
+          "kubevirt.io/domain": "windows-apicall-vm"
         }
       },
       "spec": {
@@ -23,8 +23,7 @@
           "firmware": {
             "bootloader": {
               "efi": {}
-            },
-            "secureBoot": true
+            }
           },
           "features": {
             "smm": {
@@ -49,7 +48,7 @@
                 "bootOrder": 1
               },
               {
-                "name": "my-harddisk",
+                "name": "rootdisk",
                 "disk": {
                   "bus": "virtio"
                 },
@@ -67,10 +66,7 @@
                 "name": "default",
                 "masquerade": {}
               }
-            ],
-            "tpm": {
-              "deviceName": "tpm0"
-            }
+            ]
           }
         },
         "networks": [
@@ -87,7 +83,7 @@
             }
           },
           {
-            "name": "my-harddisk",
+            "name": "rootdisk",
             "persistentVolumeClaim": {
               "claimName": "apivm-vdi-disk"
             }
