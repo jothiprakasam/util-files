@@ -7,23 +7,45 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: pvc-pv-role
+  name: pvc-pvc-role
   namespace: default
 rules:
-- apiGroups: [""]
-  resources: ["persistentvolumeclaims", "persistentvolumes"]
-  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: pvc-pv-rolebinding
+  name: pvc-pvc-rolebinding
   namespace: default
 subjects:
-- kind: ServiceAccount
-  name: pvc-pv-sa
-  namespace: default
+  - kind: ServiceAccount
+    name: pvc-pv-sa
+    namespace: default
 roleRef:
   kind: Role
-  name: pvc-pv-role
+  name: pvc-pvc-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pvc-pv-cluster-role
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pvc-pv-cluster-rolebinding
+subjects:
+  - kind: ServiceAccount
+    name: pvc-pv-sa
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: pvc-pv-cluster-role
   apiGroup: rbac.authorization.k8s.io
