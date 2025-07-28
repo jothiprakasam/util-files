@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pvc-pv-sa
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pvc-pv-role
+  namespace: default
+rules:
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims", "persistentvolumes"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pvc-pv-rolebinding
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: pvc-pv-sa
+  namespace: default
+roleRef:
+  kind: Role
+  name: pvc-pv-role
+  apiGroup: rbac.authorization.k8s.io
