@@ -1,0 +1,44 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: ubuntu-vm
+  namespace: default
+  labels:
+    kubevirt.io/domain: ubuntu-vm
+spec:
+  running: false
+  dataVolumeTemplates:
+    - metadata:
+        name: ubuntu-rootdisk-dv
+      spec:
+        source:
+          pvc:
+            name: ubuntu-iso-pvc   # Your existing uploaded Ubuntu ISO PVC
+            namespace: default
+        pvc:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 20Gi
+          storageClassName: local-path
+  template:
+    metadata:
+      labels:
+        kubevirt.io/domain: ubuntu-vm
+    spec:
+      domain:
+        cpu:
+          cores: 2
+        resources:
+          requests:
+            memory: 4Gi
+        devices:
+          disks:
+            - name: rootdisk
+              disk:
+                bus: virtio
+              bootOrder: 1
+      volumes:
+        - name: rootdisk
+          dataVolume:
+            name: ubuntu-rootdisk-dv
