@@ -1,0 +1,37 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: ubuntu-vm
+spec:
+  running: true
+  template:
+    spec:
+      domain:
+        cpu:
+          cores: 2
+        resources:
+          requests:
+            memory: 4Gi
+        devices:
+          disks:
+            - name: cdrom-disk
+              cdrom:
+                bus: sata
+              bootOrder: 1
+            - name: rootdisk
+              disk:
+                bus: virtio
+              bootOrder: 2
+          interfaces:
+            - name: default
+              masquerade: {}
+      networks:
+        - name: default
+          pod: {}
+      volumes:
+        - name: cdrom-disk
+          persistentVolumeClaim:
+            claimName: ubuntu-iso
+        - name: rootdisk
+          dataVolume:
+            name: ubuntu-rootdisk-dv
